@@ -1,0 +1,38 @@
+version: "3"
+services:
+  backend:
+    container_name: frontend
+    build: ./backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/ourastore
+    depends_on:
+      - db
+
+  frontend:
+    container_name: backend
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+
+  db:
+    container_name: db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ourastore
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

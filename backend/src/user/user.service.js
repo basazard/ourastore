@@ -14,11 +14,7 @@ const getUserByUsername = async (username) => {
       username: username,
     },
   });
-
-  if (!user) {
-    return res.status(404).send("username is not found");
-  }
-
+  
   return user;
 };
 

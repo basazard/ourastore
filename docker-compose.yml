@@ -1,7 +1,7 @@
 version: "3"
 services:
   backend:
-    container_name: frontend
+    container_name: backend
     build: ./backend
     ports:
       - "3001:3001"
@@ -13,7 +13,7 @@ services:
       - db
 
   frontend:
-    container_name: backend
+    container_name: frontend
     build: ./frontend
     ports:
       - "3000:3000"
@@ -30,7 +30,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: ourastore
     ports:
-      - "5432:5432"
+      - "5433:5433"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

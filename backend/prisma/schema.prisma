@@ -34,19 +34,27 @@ model Service {
   description String
   category Category @relation(fields: [categoryId], references: [id])
   categoryId String
-  carts Cart[]
+  items Item[]
   storage Storage?
 }
 
 model Cart {
   id String @id @unique
-  gameCash Int
-  price Int
+  itemId String
+  item Item @relation(fields: [itemId], references: [id])
   itemCount Int
   gameId String
   server String?
+}
+
+model Item {
+  id String @id @unique
+  gameCash Int
+  price Int
+  description String
   service Service @relation(fields: [serviceId], references: [id])
   serviceId String
+  carts Cart[]
 }
 
 model Storage {

@@ -1,4 +1,5 @@
 const prisma = require('../src/db');
+const { nanoid } = require('nanoid');
 
 const serviceData = [
   ['TU_ML','Top Up MLBB','TUG'],
@@ -18,6 +19,25 @@ const serviceData = [
   ['JK_GDG','Joki Gendong','JK_ML'],
   ['JK_MC','Joki Magic Chess','JK_ML'],
   ['JK_CL','Joki Classic','JK_ML'],
+]
+
+const getRandomValue = (min, max) => {
+  return Math.round(Math.random() * (max - min) + min);
+}
+
+const storageData = [
+  [getRandomValue(50000,100000), 'TU_ML'],
+  [getRandomValue(50000,100000), 'TU_ML_IRIT'],
+  [getRandomValue(50000,100000), 'TU_PUBG'],
+  [getRandomValue(50000,100000), 'TU_HOK'],
+  [getRandomValue(50000,100000), 'TU_FF'],
+  [getRandomValue(50000,100000), 'TU_FF_MAX'],
+  [getRandomValue(50000,100000), 'TU_PB'],
+  [getRandomValue(50000,100000), 'TU_MS'],
+  [getRandomValue(50000,100000), 'TU_EP'],
+  [getRandomValue(50000,100000), 'TU_CODM'],
+  [getRandomValue(50000,100000), 'TU_VALO'],
+  [getRandomValue(50000,100000), 'TU_LOL_WR']
 ]
 
 initialDB = async () => {
@@ -45,8 +65,17 @@ initialDB = async () => {
     }))
   })
 
+  const storage = await prisma.storage.createMany({
+    data : storageData.map((data) => ({
+      id : nanoid(16),
+      stock : data[0],
+      serviceId : data[1]
+    }))
+  })
+
   await prisma.$disconnect();
   console.log("Seed Successfull");
 };
 
 initialDB();
+

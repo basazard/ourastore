@@ -1,10 +1,12 @@
 const express = require("express");
 const prisma = require("../db");
-const { passwordHash } = require('../utils/passwordHasher');
+const { passwordHash } = require('../utils/utils');
 const { getAllUsers, getUserByUsername } = require("./user.service");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 const router = express.Router();
+require("dotenv").config();
 
 router.get("/", async (req, res) => {
   const users = await getAllUsers();
@@ -27,7 +29,7 @@ router.get("/:username", async (req, res) => {
   });
 });
 
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
   const { username, password, email, phone } = req.body;
   const hashPassword = await passwordHash(password);
 
@@ -81,13 +83,20 @@ router.patch("/:username", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await getUserByUsername(username);
+  const token = jwt.sign({ 
+    username : user.username, 
+    email : user.email 
+  }, process.env.JWT_KEY, {
+    expiresIn : "5m"
+  });
 
   if (user) {
     const isMatch = await bcrypt.compare(password,user.password);
     if (isMatch){
       return res.status(200).send({
         status : "success",
-        message : "login success"
+        message : "login success",
+        access_token : token
       })
     }
     return res.status(401).send({

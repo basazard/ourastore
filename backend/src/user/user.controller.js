@@ -1,19 +1,25 @@
 const express = require("express");
 const prisma = require("../db");
+require("dotenv").config();
 
-const { getAllUsers, getUserByUsername } = require("./user.service");
+const { listAllUsers, findUserByUsername, registerUser } = require("./user.service");
+const { middleware } = require("../middleware");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const users = await getAllUsers();
+router.get("/", middleware, async (req, res) => {
+  const users = await listAllUsers();
 
   res.status(200).send(users);
 });
 
-router.get("/:username", async (req, res) => {
+router.get("/:username", middleware, async (req, res) => {
   const username = req.params.username;
-  const user = await getUserByUsername(username);
+  const user = await findUserByUsername(username);
+
+  if (!user) {
+    return res.status(404).send("username is not found");
+  }
 
   res.status(200).send(user);
 });
@@ -21,14 +27,7 @@ router.get("/:username", async (req, res) => {
 router.post("/", async (req, res) => {
   const data = req.body;
 
-  const user = await prisma.user.create({
-    data: {
-      username: data.username,
-      password: data.password,
-      email: data.email,
-      phone: data.phone,
-    },
-  });
+  const user = await registerUser(data);
 
   res.status(201).send({
     data: user,

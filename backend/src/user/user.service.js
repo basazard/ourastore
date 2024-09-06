@@ -1,28 +1,33 @@
 const prisma = require("../db");
 
-const { findUsers } = require("./user.repository");
+const { getAllUsers, getUserByUsername, createUser } = require("./user.repository");
 
-const getAllUsers = async () => {
-  const users = await findUsers();
+const listAllUsers = async () => {
+  const users = await getAllUsers();
 
   return users;
 };
 
-const getUserByUsername = async (username) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      username: username,
-    },
-  });
+const findUserByUsername = async (username) => {
+  const user = await getUserByUsername(username);
 
-  if (!user) {
-    return res.status(404).send("username is not found");
+  return user;
+};
+
+const registerUser = async (data) => {
+  const isUser = await findUser(data.username);
+
+  if (isUser) {
+    throw new Error("username already registered");
   }
+
+  const user = await createUser(data);
 
   return user;
 };
 
 module.exports = {
-  getAllUsers,
-  getUserByUsername,
+  listAllUsers,
+  findUserByUsername,
+  registerUser,
 };

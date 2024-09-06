@@ -4,12 +4,13 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install && \
+  npm rebuild bcrypt --build-from-source
 
 COPY . .
 
 RUN npx prisma generate
 
-EXPOSE 3001
+EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

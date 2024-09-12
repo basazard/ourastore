@@ -40,7 +40,21 @@ const storageData = [
   [getRandomValue(50000,100000), 'TU_LOL_WR']
 ]
 
+const itemData = [
+  [5,1496,"5 (5+0) diamonds","TU_ML"],
+  [14,4043,"14 (13+1) diamonds","TU_ML"],
+  [18,5053,"18 (17+1) diamonds","TU_ML"],
+  [22,6521,"22 (20+2) diamonds","TU_ML"],
+  [33,9470,"33 (30+3) diamonds","TU_ML"],
+  [44,11961,"44 (40+4) diamonds","TU_ML"],
+  [46,13137,"46 (42+4) diamonds","TU_ML"],
+  [56,15450,"56 (51+5) diamonds","TU_ML"],
+  [64,17444,"64 (58+6) diamonds","TU_ML"],
+]
+
 initialDB = async () => {
+  await prisma.item.deleteMany({});
+  await prisma.storage.deleteMany({});
   await prisma.service.deleteMany({});
   await prisma.category.deleteMany({});
   
@@ -63,7 +77,7 @@ initialDB = async () => {
       description : data[1],
       categoryId : data[2]
     }))
-  })
+  });
 
   const storage = await prisma.storage.createMany({
     data : storageData.map((data) => ({
@@ -71,7 +85,17 @@ initialDB = async () => {
       stock : data[0],
       serviceId : data[1]
     }))
-  })
+  });
+
+  const item = await prisma.item.createMany({
+    data : itemData.map((data) => ({
+      id : nanoid(16),
+      gameCash : data[0],
+      price : data[1],
+      description : data[2],
+      serviceId : data[3]
+    }))
+  });
 
   await prisma.$disconnect();
   console.log("Seed Successfull");

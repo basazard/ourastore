@@ -25,6 +25,7 @@ const verifyToken = (req,res,next) => {
         message : err.message
       })
     }
+    req.user = user;
     next();
   });
 };

@@ -61,7 +61,8 @@ export default function PopularGames() {
       </div>
       <div className="grid grid-cols-3 gap-2">
         {listImagePopular.map((popular) => (
-          <div key={popular.name} className="p-1 rounded-2xl bg-muted flex flex-row border-2 border-transparent hover:border-primary">
+          <div key={popular.name} className="p-2 rounded-2xl bg-muted 
+          flex flex-row ring-transparent ring-2 ring-offset-2 ring-offset-secondary hover:ring-primary">
             <div className="w-[65px] h-[65px]">
             <Image
               src={popular.image}

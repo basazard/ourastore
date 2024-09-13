@@ -1,24 +1,31 @@
 import Image from "next/image";
 import logoOurastore from "../assets/logo-ourastore.webp";
+import Link from "next/link";
 
 export default function Navbar() {
   return (
     <div>
-      <div className="fixed top-0 left-0 right-0 z-10 bg-secondary border-b border-border/50">
+      <div className="fixed top-0 left-0 right-0 z-10 bg-secondary 
+      border-b border-border/50 backdrop-filter backdrop-blur-lg bg-opacity-70">
         <div className="px-24">
           <div className="h-[60px] justify-between flex flex-row">
             <div className="flex flex-row gap-4 items-center">
               <Image
                 src={logoOurastore}
                 className="h-9 w-auto"
+                alt="logo-ourastore"
               />
               <div className="group flex gap-0.5 items-center border-b-2 border-transparent hover:border-primary h-full">
                 <svg className="h-4 w-5 text-white group-hover:text-primary" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
-                <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">Beranda</span>
+                <Link href="/">
+                  <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">Beranda</span>
+                </Link>
               </div>
               <div className="group flex gap-0.5 items-center border-b-2 border-transparent hover:border-primary h-full">
                 <svg className="h-4 w-5 text-white group-hover:text-primary" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">Cek Transaksi</span>
+                <Link href="/cek-transaksi">
+                  <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">Cek Transaksi</span>
+                </Link>
               </div>
               <div className="group flex gap-0.5 items-center border-b-2 border-transparent hover:border-primary h-full">
                 <svg className="h-4 w-5 text-white group-hover:text-primary" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><rect fill="none" height="24" width="24"/><g><path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/></g></svg>

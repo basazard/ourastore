@@ -37,7 +37,8 @@ module.exports = {
         "secondary-foreground" : "hsl(60 9.09% 97.84%)",
         "border" : "hsl(206.67 5.52% 31.96%)",
         "muted" : "hsl(210 6.78% 23.14%)",
-        "input" : "hsl(210 6.86% 40%)"
+        "input" : "hsl(210 6.86% 40%)",
+        "authorization" : "hsl(0 0% 47.84%)"
       }
     },
   },

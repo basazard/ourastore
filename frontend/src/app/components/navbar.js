@@ -23,7 +23,7 @@ export default function Navbar() {
               </div>
               <div className="group flex gap-0.5 items-center border-b-2 border-transparent hover:border-primary h-full">
                 <svg className="h-4 w-5 text-white group-hover:text-primary" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <Link href="/cek-transaksi">
+                <Link href="/invoices">
                   <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">Cek Transaksi</span>
                 </Link>
               </div>
@@ -48,12 +48,14 @@ export default function Navbar() {
                 </button>               
               </div>
               <div className="flex flex-row gap-2 items-center">
-                <button className="border border-border/50 px-3 py-2 rounded-lg items-center bg-transparent hover:bg-muted/50 duration-500">
+                <Link className="border border-border/50 px-3 py-2 rounded-lg items-center bg-transparent hover:bg-muted/50 duration-500" 
+                href='/sign-in'>
                   <span className="text-secondary-foreground font-light text-sm">Masuk</span>
-                </button>
-                <button className="bg-primary px-3 py-2 rounded-lg items-center hover:bg-primary/50 duration-500">
+                </Link>
+                <Link className="bg-primary px-3 py-2 rounded-lg items-center hover:bg-primary/50 duration-500"
+                href='/sign-up'>
                   <span className="text-secondary-foreground font-light text-sm">Daftar</span>
-                </button>                
+                </Link>                
               </div>
             </div>
           </div>

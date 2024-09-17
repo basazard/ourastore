@@ -1,10 +1,13 @@
 "use client";
 import AuthLayout from "../components/authLayout";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [match, setMatch] = useState(false);
+  const router = useRouter();
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -23,18 +26,36 @@ export default function SignUp() {
     formData.forEach((value, key) => {
       formObject[key] = value;
     });
+
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BE_API_URL}/users/register`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify(formObject),
-        }
-      );
+      const res = await fetch(`${baseUrl}/users/register`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(formObject),
+      });
+
+      const toastId = toast.loading("Submitting your form...");
+
+      if (res.status === 500) {
+        const data = await res.json();
+        toast.update(toastId, {
+          render: data.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 1000,
+        });
+        console.log(data);
+      }
       const data = await res.json();
+      router.push("/sign-in");
+      toast.update(toastId, {
+        render: data.message,
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
       console.log(data);
     } catch (err) {
       console.log(err);
@@ -43,6 +64,10 @@ export default function SignUp() {
 
   const [password, setPassword] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState(true);
+
+  const toggleHideErrorAlert = () => {
+    setError(false);
+  };
 
   const toggleHidePassword = () => {
     setPassword(!password);

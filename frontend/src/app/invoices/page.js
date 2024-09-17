@@ -5,10 +5,10 @@ import FindTransaction from "../section/trackTransaction";
 export default function TransactionCheck() {
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="pt-[60px]">
-        <FindTransaction/>
+        <FindTransaction />
       </div>
     </div>
-  )
+  );
 }

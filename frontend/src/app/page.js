@@ -7,12 +7,12 @@ import Footer from "./components/banner";
 export default function Home() {
   return (
     <div>
-      <Navbar/>      
+      <Navbar />
       <div className="pt-[60px]">
-        <HomeSlider/>
-        <PopularGames/>
-        <Category/>
-        <Footer/>
+        <HomeSlider />
+        <PopularGames />
+        <Category />
+        <Footer />
       </div>
     </div>
   );

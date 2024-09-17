@@ -1,10 +1,16 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3001;
+const cors = require('cors');
 
 require("dotenv").config();
 
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
+const rootRouter = express.Router();
 
 const userController = require("./user/user.controller");
 const categoryController = require("./category/category.controller");
@@ -13,12 +19,14 @@ const storageController = require("./storage/storage.controller");
 const itemController = require("./item/item.controller");
 const cartController = require("./cart/cart.controller");
 
-app.use("/users", userController);
-app.use("/categories",categoryController);
-app.use("/services",serviceController);
-app.use("/storage", storageController);
-app.use("/item",itemController);
-app.use("/cart",cartController);
+rootRouter.use("/users", userController);
+rootRouter.use("/categories", categoryController);
+rootRouter.use("/services", serviceController);
+rootRouter.use("/storage", storageController);
+rootRouter.use("/item", itemController);
+rootRouter.use("/cart", cartController);
+
+app.use("/api", rootRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);

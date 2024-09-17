@@ -33,24 +33,37 @@ router.post("/register", async (req, res) => {
   const { fullname, username, password, email, phone } = req.body;
   const hashPassword = await passwordHash(password);
 
-  const user = await prisma.user.create({
-    data: {
-      fullname: fullname,
-      username: username,
-      password: hashPassword,
-      email: email,
-      phone: phone,
-    },
-  });
+  try {
+    const user = await prisma.user.create({
+      data: {
+        fullname: fullname,
+        username: username,
+        password: hashPassword,
+        email: email,
+        phone: phone,
+      },
+    });
 
-  return res.status(201).send({
-    status: "success",
-    message: "User created successfully",
-    data: {
-      username: user.username,
-      email: user.email,
-    },
-  });
+    return res.status(201).send({
+      status: "success",
+      message: "User created successfully",
+      data: {
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    if (err.code === "P2002") {
+      return res.status(500).send({
+        status: "failed",
+        message: `A ${err.meta.modelName} with that ${err.meta.target[0]} already exist`,
+      });
+    }
+    return res.status(500).send({
+      status: "failed",
+      message: err.message,
+    });
+  }
 });
 
 router.patch("/:username", async (req, res) => {

@@ -46,7 +46,7 @@ router.post("/register", async (req, res) => {
 
     return res.status(201).send({
       status: "success",
-      message: "User created successfully",
+      message: "User Created Successfully",
       data: {
         username: user.username,
         email: user.email,
@@ -96,36 +96,43 @@ router.patch("/:username", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const user = await getUserByUsername(username);
-  const token = jwt.sign(
-    {
-      username: user.username,
-      email: user.email,
-    },
-    process.env.JWT_KEY,
-    {
-      expiresIn: "5m",
-    }
-  );
 
-  if (user) {
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (isMatch) {
-      return res.status(200).send({
-        status: "success",
-        message: "login success",
-        access_token: token,
+  try {
+    const user = await getUserByUsername(username);
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        const token = jwt.sign(
+          {
+            username: user.username,
+            email: user.email,
+          },
+          process.env.JWT_KEY,
+          {
+            expiresIn: "1m",
+          }
+        );
+        return res.status(200).send({
+          status: "success",
+          message: "Login Successfull",
+          access_token: token,
+        });
+      }
+      return res.status(401).send({
+        status: "failed",
+        message: "Invalid Credential",
       });
     }
     return res.status(401).send({
       status: "failed",
-      message: "invalid password",
+      message: "Invalid Credential",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      status: "failed",
+      message: err.message,
     });
   }
-  return res.status(401).send({
-    status: "failed",
-    message: "invalid username",
-  });
 });
 
 module.exports = router;

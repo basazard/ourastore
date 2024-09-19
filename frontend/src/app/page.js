@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from "./components/navbar";
 import HomeSlider from "./components/homeSlider";
 import PopularGames from "./section/popularGame";

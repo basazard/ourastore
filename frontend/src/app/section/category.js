@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { listTopUpGames, listJokiMLBB } from "../content-list/contentList";
+import { listCategory } from "../content-list/contentList";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Category() {
   const [categoryState, setCategoryState] = useState(0);
@@ -16,32 +17,6 @@ export default function Category() {
     }, 100);
   };
 
-  const listCategory = [
-    {
-      name: "Top Up Games",
-      listImage: listTopUpGames,
-    },
-    {
-      name: "Joki MLBB",
-      listImage: listJokiMLBB,
-    },
-    {
-      name: "Joki HOK",
-      listImage: [],
-    },
-    {
-      name: "Pulsa & Data",
-      listImage: [],
-    },
-    {
-      name: "Voucher",
-      listImage: [],
-    },
-    {
-      name: "Tagihan",
-      listImage: [],
-    },
-  ];
   return (
     <div className="px-20">
       <div className="flex flex-col gap-y-6">
@@ -68,7 +43,7 @@ export default function Category() {
                 className={`${animate ? "animate-slideUp" : ""} transition-all`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <button>
+                <Link href={value.link}>
                   <div className="relative group w-[192px] h-[288px]">
                     <div
                       className="absolute z-10 inset-0 bg-muted rounded-2xl opacity-0 transform 
@@ -92,7 +67,7 @@ export default function Category() {
                       </p>
                     </div>
                   </div>
-                </button>
+                </Link>
               </div>
             ))}
           </div>

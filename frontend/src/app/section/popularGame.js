@@ -1,56 +1,9 @@
 import Image from "next/image";
-import popular1 from "../assets/popular-games/ml.webp";
-import popular2 from "../assets/popular-games/ml-paket-irit.webp";
-import popular3 from "../assets/popular-games/pubg.webp";
-import popular4 from "../assets/popular-games/ff.webp";
-import popular5 from "../assets/popular-games/ff-max.webp";
-import popular6 from "../assets/popular-games/hok.webp";
-import popular7 from "../assets/popular-games/joki-rank-ecer.webp";
-import popular8 from "../assets/popular-games/joki-rank-paket.webp";
+import { listImagePopular } from "../content-list/contentList";
+import Link from "next/link";
+import cardBackground from "../assets/bg-image.jpg";
 
 export default function PopularGames() {
-  const listImagePopular = [
-    {
-      image: popular1,
-      name: "Mobile Legends",
-      owner: "Moonton",
-    },
-    {
-      image: popular2,
-      name: "Mobile Legends Paket Irit",
-      owner: "Moonton",
-    },
-    {
-      image: popular3,
-      name: "PUBG Mobile",
-      owner: "Tencent Games",
-    },
-    {
-      image: popular4,
-      name: "Free Fire",
-      owner: "Garena",
-    },
-    {
-      image: popular5,
-      name: "Free Fire Max",
-      owner: "Garena",
-    },
-    {
-      image: popular6,
-      name: "Honor of Kings",
-      owner: "Tencent Games",
-    },
-    {
-      image: popular7,
-      name: "Joki Rank Eceran",
-      owner: "Oura Store",
-    },
-    {
-      image: popular8,
-      name: "Joki Rank Paketan",
-      owner: "Oura Store",
-    },
-  ];
   return (
     <section className="px-20 py-8 flex flex-col gap-y-6">
       <div>
@@ -60,10 +13,15 @@ export default function PopularGames() {
         </p>
       </div>
       <div className="grid grid-cols-3 gap-2">
-        {listImagePopular.map((popular) => (
-          <div
+        {listImagePopular.map((popular, index) => (
+          <Link
             key={popular.name}
-            className="p-2 rounded-2xl bg-muted 
+            href={popular.link}
+            style={{
+              backgroundImage: `url(${cardBackground.src})`,
+              animationDelay: `${index * 0.1}s`,
+            }}
+            className="p-2 rounded-2xl animate-slideUp transition-all
           flex flex-row ring-transparent ring-2 ring-offset-2 ring-offset-secondary hover:ring-primary"
           >
             <div className="w-[65px] h-[65px]">
@@ -78,7 +36,7 @@ export default function PopularGames() {
                 {popular.owner}
               </h3>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

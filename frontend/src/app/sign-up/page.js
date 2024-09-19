@@ -7,9 +7,11 @@ import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [match, setMatch] = useState(false);
+  const [password, setPassword] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState(true);
   const router = useRouter();
 
-  async function onSubmit(e) {
+  async function registerSubmit(e) {
     e.preventDefault();
     const baseUrl = process.env.NEXT_PUBLIC_BE_API_URL;
     const formData = new FormData(e.target);
@@ -38,7 +40,7 @@ export default function SignUp() {
 
       const toastId = toast.loading("Submitting your form...");
 
-      if (res.status === 500) {
+      if (!res.ok) {
         const data = await res.json();
         toast.update(toastId, {
           render: data.message,
@@ -46,28 +48,21 @@ export default function SignUp() {
           isLoading: false,
           autoClose: 1000,
         });
-        console.log(data);
       }
+
       const data = await res.json();
       router.push("/sign-in");
+
       toast.update(toastId, {
         render: data.message,
         type: "success",
         isLoading: false,
         autoClose: 1000,
       });
-      console.log(data);
     } catch (err) {
       console.log(err);
     }
   }
-
-  const [password, setPassword] = useState(true);
-  const [confirmPassword, setConfirmPassword] = useState(true);
-
-  const toggleHideErrorAlert = () => {
-    setError(false);
-  };
 
   const toggleHidePassword = () => {
     setPassword(!password);
@@ -78,7 +73,7 @@ export default function SignUp() {
 
   return (
     <AuthLayout>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={registerSubmit}>
         <div className="px-24 py-16 text-secondary-foreground">
           <div className="space-y-2">
             <h1 className="text-3xl font-medium">Daftar</h1>

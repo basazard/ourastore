@@ -1,4 +1,3 @@
-import HomeSlider from "../components/homeSlider";
 import Navbar from "../components/navbar";
 import FindTransaction from "../section/trackTransaction";
 

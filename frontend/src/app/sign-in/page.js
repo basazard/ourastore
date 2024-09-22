@@ -5,10 +5,11 @@ import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "../context/authContext";
+import { jwtDecode } from "jwt-decode";
 
 export default function SignIn() {
   const [password, setPassword] = useState(true);
-  const { setAuthenticated } = useContext(AuthContext);
+  const { setAuthenticated, setRole } = useContext(AuthContext);
   const router = useRouter();
 
   const toggleHidePassword = () => {
@@ -48,6 +49,8 @@ export default function SignIn() {
 
       const data = await res.json();
       localStorage.setItem("accessToken", data.access_token);
+      const decodedToken = jwtDecode(data.access_token);
+      setRole(decodedToken.role);
       setAuthenticated(true);
       router.push("/");
 
@@ -135,11 +138,7 @@ export default function SignIn() {
           </div>
           <div className="mt-4 flex flex-row justify-between">
             <div className="items-center flex flex-row gap-2">
-              <input
-                type="checkbox"
-                className="accent-primary"
-                required
-              ></input>
+              <input type="checkbox" className="accent-primary"></input>
               <span className="text-xs font-extralight">Ingat akun ku</span>
             </div>
             <span className="text-sm font-light text-primary hover:text-primary/50">

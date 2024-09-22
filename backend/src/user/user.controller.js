@@ -105,11 +105,11 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign(
           {
             username: user.username,
-            email: user.email,
+            role: user.role,
           },
           process.env.JWT_KEY,
           {
-            expiresIn: "1m",
+            expiresIn: "1h",
           }
         );
         return res.status(200).send({

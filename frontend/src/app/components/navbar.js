@@ -4,17 +4,30 @@ import logoOurastore from "../assets/logo-ourastore.webp";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function Navbar() {
-  const { authenticated } = useContext(AuthContext);
+  const { authenticated, setAuthenticated } = useContext(AuthContext);
+  const router = useRouter();
+
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    setAuthenticated(false);
+    router.push("/sign-in");
+    toast.success("Logout successfull", {
+      autoClose: 1000,
+    });
+  };
+
   return (
     <div>
       <div
         className="fixed top-0 left-0 right-0 z-10 bg-secondary 
       border-b border-border/50 backdrop-filter backdrop-blur-lg bg-opacity-70"
       >
-        <div className="px-24">
-          <div className="h-[60px] justify-between flex flex-row">
+        <div className="px-24 py-4">
+          <div className="h-auto justify-between flex flex-row">
             <div className="flex flex-row gap-4 items-center">
               <Image
                 src={logoOurastore}
@@ -142,8 +155,8 @@ export default function Navbar() {
               </div>
               {authenticated ? (
                 <div className="flex flex-row gap-2 items-center">
-                  <Link
-                    href=""
+                  <button
+                    onClick={logout}
                     className="bg-muted px-3 py-2 rounded-lg flex flex-row gap-1 items-center"
                   >
                     <svg
@@ -176,7 +189,7 @@ export default function Navbar() {
                       <path d="M24 24H0V0h24v24z" fill="none" opacity=".87" />
                       <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z" />
                     </svg>
-                  </Link>
+                  </button>
                 </div>
               ) : (
                 <div className="flex flex-row gap-2 items-center">

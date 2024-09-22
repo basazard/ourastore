@@ -14,63 +14,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   fullname String
   username String @id @unique
   password String
   email String @unique
-  phone String @unique
+  phone String @unique 
+  role Role @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime? 
 }
 
 model Category {
-  id String @id @unique
-  description String
+  id String @id @default(uuid())
+  name String @unique
   services Service[]
 }
 
 model Service {
-  id String @id @unique
-  description String
-  category Category @relation(fields: [categoryId], references: [id])
+  id String @id @default(uuid())
+  name String @unique
+  owner String @unique
+  imageName String
+  imageUrl String 
   categoryId String
-  items Item[]
-  storage Storage?
+  category Category @relation(fields: [categoryId], references: [id])
 }
 
-model Cart {
-  id String @id @unique
-  itemId String
-  item Item @relation(fields: [itemId], references: [id])
-  itemCount Int
-  gameId String
-  server String?
-}
-
-model Item {
-  id String @id @unique
-  gameCash Int
-  price Int
-  description String
-  service Service @relation(fields: [serviceId], references: [id])
-  serviceId String
-  carts Cart[]
-}
-
-model Storage {
-  id String @id @unique
-  stock Int
-  service Service @relation(fields: [serviceId], references: [id])
-  serviceId String @unique
-}
-
-model Promo {
-  id String @id @unique
-  description String
-  type String
-  discountAmount Int?
-  fixedAmount Int?
-  startDate DateTime
-  endDate DateTime
-}

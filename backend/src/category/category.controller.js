@@ -56,10 +56,10 @@ router.delete("/:name", async (req, res) => {
       data: category,
     });
   } catch (err) {
-    if (err.code === "P2025") {
+    if (err.code === "P2003") {
       return res.status(500).send({
         status: "failed",
-        message: err.meta.cause,
+        message: "This category has related service. Delete service first",
       });
     }
     return res.status(500).send({
@@ -84,9 +84,15 @@ router.put("/:name", async (req, res) => {
 
     return res.status(200).send({
       status: "success",
-      message: "Category updated",
+      message: `Category ${category.name} updated`,
     });
   } catch (err) {
+    if (err.code === "P2002") {
+      return res.status(500).send({
+        status: "failed",
+        message: `A ${err.meta.modelName} with that ${err.meta.target[0]} already exist`,
+      });
+    }
     return res.status(500).send({
       status: "failed",
       message: err.message,

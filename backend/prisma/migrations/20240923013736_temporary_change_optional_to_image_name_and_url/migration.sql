@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Service" ALTER COLUMN "imageName" DROP NOT NULL,
+ALTER COLUMN "imageUrl" DROP NOT NULL;

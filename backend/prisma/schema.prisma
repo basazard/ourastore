@@ -39,10 +39,15 @@ model Category {
 model Service {
   id String @id @default(uuid())
   name String @unique
-  owner String @unique
-  imageName String
-  imageUrl String 
+  owner String
+  imageName String?
+  imageUrl String?
   categoryId String
   category Category @relation(fields: [categoryId], references: [id])
 }
 
+model Assets {
+  id String @id @default(uuid())
+  assetName String @unique
+  assetUrl String
+}

@@ -4,6 +4,9 @@ import AdminNavbar from "../components/navbar";
 import { Button } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import { EditModal } from "../components/editModal";
+import { DeleteButton } from "../components/deleteButton";
+import { AddForm } from "../components/addForm";
+import { ServiceForm } from "../components/serviceForm";
 
 export default function AdminService() {
   const baseUrl = process.env.NEXT_PUBLIC_BE_API_URL;
@@ -156,67 +159,11 @@ export default function AdminService() {
     <AdminNavbar>
       <div className="text-secondary-foreground">
         <div className="flex flex-col gap-4">
-          <form className="flex flex-col gap-4" onSubmit={addService}>
-            <div>
-              <span className="text-4xl font-bold text-primary">
-                Service Form
-              </span>
-            </div>
-            <div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col gap-2">
-                  <span bg>Fill a service name</span>
-                  <input
-                    type="text"
-                    placeholder="Service name"
-                    required
-                    className="w-full p-2 rounded-lg text-sm
-                 bg-muted font-extralight text-secondary-foreground
-                  border-2 border-transparent focus:border-primary focus:outline-none"
-                    name="serviceName"
-                  ></input>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <span bg>Fill a service owner</span>
-                  <input
-                    type="text"
-                    placeholder="Service owner"
-                    required
-                    className="w-full p-2 rounded-lg text-sm
-                 bg-muted font-extralight text-secondary-foreground
-                  border-2 border-transparent focus:border-primary focus:outline-none"
-                    name="serviceOwner"
-                  ></input>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <span bg>Pick category</span>
-                  <select
-                    className="w-full p-2 rounded-lg text-sm bg-muted border-2 
-              border-transparent focus:border-primary focus:outline-none"
-                    name="catgId"
-                    required
-                  >
-                    {categories.map((category, index) => (
-                      <>
-                        <option value={category.id} key={index}>
-                          {category.name}
-                        </option>
-                      </>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col items-start">
-              <Button
-                type="submit"
-                radius="sm"
-                className="bg-primary text-secondary-foreground"
-              >
-                Add Service
-              </Button>
-            </div>
-          </form>
+          <AddForm
+            formContent={ServiceForm}
+            handler={addService}
+            categories={categories}
+          />
           <div className="grid grid-cols-3 gap-4">
             {services.map((service, index) => (
               <div key={index} className="bg-muted rounded-lg p-4">
@@ -237,22 +184,7 @@ export default function AdminService() {
                       value2={service.owner}
                       categories={categories}
                     />
-                    <Button
-                      onClick={() => deleteService(service.name)}
-                      isIconOnly
-                      color="danger"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="24px"
-                        viewBox="0 0 24 24"
-                        width="24px"
-                        fill="#FFFFFF"
-                      >
-                        <path d="M0 0h24v24H0V0z" fill="none" />
-                        <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z" />
-                      </svg>
-                    </Button>
+                    <DeleteButton handler={() => deleteService(service.name)} />
                   </div>
                 </div>
               </div>

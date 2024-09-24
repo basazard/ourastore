@@ -20,6 +20,7 @@ const serviceController = require("./service/service.controller");
 const storageController = require("./storage/storage.controller");
 const itemController = require("./item/item.controller");
 const cartController = require("./cart/cart.controller");
+const assetsController = require("./assets/asset.controller");
 
 rootRouter.use("/users", userController);
 rootRouter.use("/categories", categoryController);
@@ -27,6 +28,7 @@ rootRouter.use("/services", serviceController);
 rootRouter.use("/storage", storageController);
 rootRouter.use("/item", itemController);
 rootRouter.use("/cart", cartController);
+rootRouter.use("/assets", assetsController);
 
 app.use("/api", rootRouter);
 

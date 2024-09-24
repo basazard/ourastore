@@ -41,7 +41,6 @@ model Service {
   name String @unique
   owner String
   imageName String?
-  imageUrl String?
   categoryId String
   category Category @relation(fields: [categoryId], references: [id])
 }
@@ -49,5 +48,5 @@ model Service {
 model Assets {
   id String @id @default(uuid())
   assetName String @unique
-  assetUrl String
+  assetCodedName String 
 }

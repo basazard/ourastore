@@ -8,6 +8,7 @@ export const AuthContext = createContext();
 export default function AuthProvider({ children }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [role, setRole] = useState(null);
+  const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function AuthProvider({ children }) {
       }
       setAuthenticated(true);
       setRole(decodeToken.role);
+      setUsername(decodeToken.username);
     }
     setLoading(false);
   }, []);
@@ -31,7 +33,14 @@ export default function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ authenticated, setAuthenticated, role, setRole }}
+      value={{
+        authenticated,
+        setAuthenticated,
+        role,
+        setRole,
+        username,
+        setUsername,
+      }}
     >
       {children}
     </AuthContext.Provider>

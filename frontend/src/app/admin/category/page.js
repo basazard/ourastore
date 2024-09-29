@@ -6,22 +6,27 @@ import { EditModal } from "../components/editModal";
 import { DeleteButton } from "../components/deleteButton";
 import { AddForm } from "../components/addForm";
 import { CategoryForm } from "../components/categoryForm";
+import { deleteRequest, fetchData, formRequest } from "@/app/utils/fetchData";
+import {
+  Table,
+  TableBody,
+  TableColumn,
+  TableRow,
+  TableHeader,
+  TableCell,
+} from "@nextui-org/react";
 
 export default function AdminCategory() {
-  const baseUrl = process.env.NEXT_PUBLIC_BE_API_URL;
   const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   async function fetchCategories() {
     try {
-      const res = await fetch(`${baseUrl}/categories`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "GET",
-      });
-
-      const data = await res.json();
-      setCategories(data.data);
+      const categories = await fetchData("categories");
+      setCategories(categories.data);
     } catch (err) {
       console.log(err);
     }
@@ -32,133 +37,96 @@ export default function AdminCategory() {
     const formData = new FormData(e.target);
     const name = formData.get("name");
     try {
-      const res = await fetch(`${baseUrl}/categories`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({ name }),
-      });
-
-      const toastId = toast.loading("Submitting form...");
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.update(toastId, {
-          render: data.message,
-          type: "error",
-          isLoading: false,
-          autoClose: 1000,
-        });
-        return;
-      }
-
-      toast.update(toastId, {
-        render: data.message,
-        type: "success",
-        isLoading: false,
-        autoClose: 1000,
-      });
-      fetchCategories();
+      await formRequest("categories", { name }, fetchCategories, "POST");
     } catch (err) {
       console.log(err);
     }
   }
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   async function deleteCategory(categoryName) {
     try {
-      const res = await fetch(`${baseUrl}/categories/${categoryName}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message, {
-          isLoading: false,
-          autoClose: 1000,
-        });
-        return;
-      }
-      toast.success(data.message, {
-        isLoading: false,
-        autoClose: 1000,
-      });
-      fetchCategories();
+      await deleteRequest(`categories/${categoryName}`, fetchCategories);
     } catch (err) {
       console.log(err);
     }
   }
 
-  async function updateCategory(e, category) {
+  async function updateCategory(e, categoryName) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const newName = formData.get("name");
     try {
-      const res = await fetch(`${baseUrl}/categories/${category}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ newName }),
-        method: "PUT",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message, {
-          isLoading: false,
-          autoClose: 1000,
-        });
-        return;
-      }
-
-      toast.success(data.message, {
-        isLoading: false,
-        autoClose: 1000,
-      });
-      fetchCategories();
-    } catch (err) {
+      await formRequest(
+        `categories/${categoryName}`,
+        { newName },
+        fetchCategories,
+        "PUT"
+      );
+    } catch {
       console.log(err);
     }
   }
+
+  const columns = [
+    {
+      key: "category name",
+      label: "Category Name",
+    },
+    {
+      key: "edit",
+      label: "Edit",
+    },
+    {
+      key: "delete",
+      label: "Delete",
+    },
+  ];
 
   return (
     <AdminNavbar>
       <div className="text-secondary-foreground">
         <div className="flex flex-col gap-4">
           <AddForm formContent={CategoryForm} handler={addCategory} />
-          <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-3 gap-4">
+          <Table
+            classNames={{
+              table: "bg-secondary",
+              wrapper: "bg-secondary",
+              th: "bg-muted",
+              tr: "hover:bg-muted",
+            }}
+          >
+            <TableHeader columns={columns}>
+              {(column) => (
+                <TableColumn key={column.key}>
+                  <span className="text-secondary-foreground text-opacity-50">
+                    {column.label}
+                  </span>
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody>
               {categories.map((category, index) => (
-                <div key={index} className="bg-muted p-4 rounded-lg">
-                  <div className="flex flex-row justify-between items-center">
-                    <div>
-                      <span>{category.name}</span>
-                    </div>
-                    <div className="flex flex-row gap-2 items-center">
-                      <EditModal
-                        name="Category"
-                        handler={(e) => updateCategory(e, category.name)}
-                        formField={EditCategoryForm}
-                        value={category.name}
-                      />
-                      <DeleteButton
-                        handler={() => deleteCategory(category.name)}
-                      />
-                    </div>
-                  </div>
-                </div>
+                <TableRow key={index} className="text-secondary-foreground">
+                  <TableCell className="rounded-l-lg">
+                    <span>{category.name}</span>
+                  </TableCell>
+                  <TableCell>
+                    <EditModal
+                      name="Category"
+                      handler={(e) => updateCategory(e, category.name)}
+                      formField={EditCategoryForm}
+                      value={category.name}
+                    />
+                  </TableCell>
+                  <TableCell className="rounded-r-lg">
+                    <DeleteButton
+                      handler={() => deleteCategory(category.name)}
+                    />
+                  </TableCell>
+                </TableRow>
               ))}
-            </div>
-          </div>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </AdminNavbar>

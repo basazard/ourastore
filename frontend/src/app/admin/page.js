@@ -7,7 +7,6 @@ import AdminNavbar from "./components/navbar";
 
 export default function AdminHome() {
   const router = useRouter();
-  const [categories, setCategories] = useState([]);
   const { authenticated, role } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
 

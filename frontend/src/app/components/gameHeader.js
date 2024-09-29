@@ -1,29 +1,30 @@
-import { checkGame, listCategory } from "../content-list/contentList";
 import Image from "next/image";
 import cardBackground from "../assets/bg-image.jpg";
 
-export default function GameHeader({ gameName }) {
-  const game = checkGame(gameName, listCategory[0].listImage);
+export default function GameHeader({ gameName, gameUrl, gameOwner }) {
   return (
     <div className="border-b border-border/50">
       <div
-        className="px-20 text-secondary-foreground bg-muted"
+        className="px-4 sm:px-20 text-secondary-foreground bg-muted object-cover"
         style={{
           backgroundImage: `url(${cardBackground.src})`,
         }}
       >
         <div className="flex flex-row max-h-[160px] items-center gap-4">
-          <div className="p-2">
+          <div className="p-2 h-32 w-32 sm:w-48 sm:h-48 relative">
             <Image
-              src={game.image}
-              className="object-cover w-48 h-48 rounded-2xl -translate-y-1/2"
+              src={gameUrl}
+              fill={true}
+              className="object-cover rounded-2xl -translate-y-1/2"
             />
           </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-bold">{game.name.toUpperCase()}</span>
-            <span className="text-base font-normal">{game.owner}</span>
-            <div className="mt-6 flex flex-row gap-6 text-sm font-extralight">
-              <div className="flex flex-row items-center gap-2">
+          <div className="flex flex-col py-4">
+            <span className="text-sm sm:text-lg font-bold">{gameName}</span>
+            <span className="text-xs sm:text-base font-normal">
+              {gameOwner}
+            </span>
+            <div className="mt-2 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm font-extralight">
+              <div className="flex flex-row items-center gap-2 text-xs sm:text-base">
                 <svg
                   className="h-[20px]"
                   xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +45,7 @@ export default function GameHeader({ gameName }) {
                 </svg>
                 <span>Proses Cepat</span>
               </div>
-              <div className="flex flex-row items-center gap-2">
+              <div className="flex flex-row items-center gap-2 text-xs sm:text-base">
                 <svg
                   className="h-[24px]"
                   xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +59,7 @@ export default function GameHeader({ gameName }) {
                 </svg>
                 <span>Layanan Chat 24/7</span>
               </div>
-              <div className="flex flex-row items-center gap-2">
+              <div className="flex flex-row items-center gap-2 text-xs sm:text-base">
                 <svg
                   className="h-[24px]"
                   xmlns="http://www.w3.org/2000/svg"

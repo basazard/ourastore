@@ -1,14 +1,30 @@
 "use client";
 import Image from "next/image";
 import logoOurastore from "../assets/logo-ourastore.webp";
-import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/authContext";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import {
+  NavbarAuthenticated,
+  NavbarItem,
+  NavbarLanguage,
+  NavbarNotAuthenticated,
+  NavbarSearch,
+} from "./navbarItem";
+import {
+  CalculatorIcon,
+  CrossIcon,
+  HamburgerIcon,
+  HomeIcon,
+  LeaderboardIcon,
+  SearchIcon,
+} from "./navbarIcon";
+import { LeftNavbarItem } from "./leftNavbarItem";
 
 export default function Navbar() {
-  const { authenticated, setAuthenticated } = useContext(AuthContext);
+  const { authenticated, setAuthenticated, username } = useContext(AuthContext);
+  const [hamburgerClicked, setHamburgerClicked] = useState(false);
   const router = useRouter();
 
   const logout = () => {
@@ -20,201 +36,90 @@ export default function Navbar() {
     });
   };
 
+  const openLeftNavbar = () => {
+    setHamburgerClicked(true);
+  };
+
+  const closeLeftNavbar = () => {
+    setHamburgerClicked(false);
+  };
+
   return (
-    <div>
+    <>
       <div
         className="fixed top-0 left-0 right-0 z-10 bg-secondary 
-      border-b border-border/50 backdrop-filter backdrop-blur-lg bg-opacity-70"
+      border-b border-border/50 backdrop-filter backdrop-blur-lg bg-opacity-70 flex flex-col"
       >
-        <div className="px-24 py-4">
-          <div className="h-auto justify-between flex flex-row">
+        <div className="sm:px-24 px-4 py-4">
+          <div className="h-full justify-between flex flex-row">
             <div className="flex flex-row gap-4 items-center">
+              <HamburgerIcon handler={openLeftNavbar} />
               <Image
                 src={logoOurastore}
                 className="h-9 w-auto"
                 alt="logo-ourastore"
               />
-              <div className="group flex gap-0.5 items-center border-b-2 border-transparent hover:border-primary h-full">
-                <svg
-                  className="h-4 w-5 text-white group-hover:text-primary"
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  width="24px"
-                  fill="currentColor"
-                >
-                  <path d="M0 0h24v24H0V0z" fill="none" />
-                  <path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" />
-                </svg>
-                <Link href="/">
-                  <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">
-                    Beranda
-                  </span>
-                </Link>
-              </div>
-              <div className="group flex gap-0.5 items-center border-b-2 border-transparent hover:border-primary h-full">
-                <svg
-                  className="h-4 w-5 text-white group-hover:text-primary"
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  width="24px"
-                  fill="currentColor"
-                >
-                  <path d="M0 0h24v24H0V0z" fill="none" />
-                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                </svg>
-                <Link href="/invoices">
-                  <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">
-                    Cek Transaksi
-                  </span>
-                </Link>
-              </div>
-              <div className="group flex gap-0.5 items-center border-b-2 border-transparent hover:border-primary h-full">
-                <svg
-                  className="h-4 w-5 text-white group-hover:text-primary"
-                  xmlns="http://www.w3.org/2000/svg"
-                  enable-background="new 0 0 24 24"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  width="24px"
-                  fill="currentColor"
-                >
-                  <rect fill="none" height="24" width="24" />
-                  <g>
-                    <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z" />
-                  </g>
-                </svg>
-                <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">
-                  Leaderboard
-                </span>
-              </div>
-              <div className="group flex gap-0.5 items-center border-b-2 border-transparent hover:border-primary h-full">
-                <svg
-                  className="h-4 w-5 text-white group-hover:text-primary"
-                  xmlns="http://www.w3.org/2000/svg"
-                  enable-background="new 0 0 24 24"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  width="24px"
-                  fill="currentColor"
-                >
-                  <g>
-                    <rect fill="none" height="24" width="24" />
-                  </g>
-                  <g>
-                    <g>
-                      <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M19,19H5V5h14V19z" />
-                      <rect height="1.5" width="5" x="6.25" y="7.72" />
-                      <rect height="1.5" width="5" x="13" y="15.75" />
-                      <rect height="1.5" width="5" x="13" y="13.25" />
-                      <polygon points="8,18 9.5,18 9.5,16 11.5,16 11.5,14.5 9.5,14.5 9.5,12.5 8,12.5 8,14.5 6,14.5 6,16 8,16" />
-                      <polygon points="14.09,10.95 15.5,9.54 16.91,10.95 17.97,9.89 16.56,8.47 17.97,7.06 16.91,6 15.5,7.41 14.09,6 13.03,7.06 14.44,8.47 13.03,9.89" />
-                    </g>
-                  </g>
-                </svg>
-                <span className="font-light text-sm text-secondary-foreground group-hover:text-primary">
-                  Kalkulator
-                </span>
-              </div>
+              <NavbarItem icon={HomeIcon} label="Beranda" href="/" />
+              <NavbarItem
+                icon={SearchIcon}
+                label="Cek Transaksi"
+                href="/invoices"
+              />
+              <NavbarItem icon={LeaderboardIcon} label="Leaderbord" href="/" />
+              <NavbarItem icon={CalculatorIcon} label="Kalkulator" href="/" />
             </div>
             <div className="flex gap-6">
               <div className="flex flex-row gap-2 items-center">
-                <button className="border border-border/50 px-3 py-2 rounded-lg flex items-center gap-1 bg-transparent hover:bg-muted/50 duration-500">
-                  <svg
-                    className="h-4 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24px"
-                    viewBox="0 0 24 24"
-                    width="24px"
-                    fill="currentColor"
-                  >
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                  </svg>
-                  <span className="text-secondary-foreground font-light text-sm">
-                    Search
-                  </span>
-                </button>
-                <button className="border border-border/50 px-3 py-2 rounded-lg flex flex-row-reverse items-center gap-1 bg-transparent hover:bg-muted/50 duration-500">
-                  <svg
-                    className="h-4 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24px"
-                    viewBox="0 0 24 24"
-                    width="24px"
-                    fill="currentColor"
-                  >
-                    <path d="M24 24H0V0h24v24z" fill="none" opacity=".87" />
-                    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z" />
-                  </svg>
-                  <span className="text-secondary-foreground font-light text-sm">
-                    ID
-                  </span>
-                </button>
+                <NavbarSearch />
+                <NavbarLanguage />
               </div>
               {authenticated ? (
-                <div className="flex flex-row gap-2 items-center">
-                  <button
-                    onClick={logout}
-                    className="bg-muted px-3 py-2 rounded-lg flex flex-row gap-1 items-center"
-                  >
-                    <svg
-                      className="h-[20px] w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      enable-background="new 0 0 24 24"
-                      height="24px"
-                      viewBox="0 0 24 24"
-                      width="24px"
-                      fill="currentColor"
-                    >
-                      <g>
-                        <rect fill="none" height="24" width="24" />
-                      </g>
-                      <g>
-                        <g>
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.35 18.5C8.66 17.56 10.26 17 12 17s3.34.56 4.65 1.5c-1.31.94-2.91 1.5-4.65 1.5s-3.34-.56-4.65-1.5zm10.79-1.38C16.45 15.8 14.32 15 12 15s-4.45.8-6.14 2.12C4.7 15.73 4 13.95 4 12c0-4.42 3.58-8 8-8s8 3.58 8 8c0 1.95-.7 3.73-1.86 5.12z" />
-                          <path d="M12 6c-1.93 0-3.5 1.57-3.5 3.5S10.07 13 12 13s3.5-1.57 3.5-3.5S13.93 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z" />
-                        </g>
-                      </g>
-                    </svg>
-                    <svg
-                      className="h-4 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="24px"
-                      viewBox="0 0 24 24"
-                      width="24px"
-                      fill="currentColor"
-                    >
-                      <path d="M24 24H0V0h24v24z" fill="none" opacity=".87" />
-                      <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z" />
-                    </svg>
-                  </button>
-                </div>
+                <NavbarAuthenticated handler={logout} username={username} />
               ) : (
-                <div className="flex flex-row gap-2 items-center">
-                  <Link
-                    className="border border-border/50 px-3 py-2 rounded-lg items-center bg-transparent hover:bg-muted/50 duration-500"
-                    href="/sign-in"
-                  >
-                    <span className="text-secondary-foreground font-light text-sm">
-                      Masuk
-                    </span>
-                  </Link>
-                  <Link
-                    className="bg-primary px-3 py-2 rounded-lg items-center hover:bg-primary/50 duration-500"
-                    href="/sign-up"
-                  >
-                    <span className="text-secondary-foreground font-light text-sm">
-                      Daftar
-                    </span>
-                  </Link>
-                </div>
+                <NavbarNotAuthenticated />
               )}
             </div>
           </div>
         </div>
+        {hamburgerClicked ? (
+          <>
+            <div
+              className="fixed inset-0 backdrop-blur-lg bg-opacity-70 h-screen"
+              onClick={closeLeftNavbar}
+            ></div>
+            <div className="fixed top-0 left-0 h-screen w-[80%] z-30 px-4 pt-4 bg-background animate-slideRight">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-row justify-between items-center">
+                  <div>
+                    <Image
+                      src={logoOurastore}
+                      className="h-9 w-auto"
+                      alt="logo-ourastore"
+                    />
+                  </div>
+                  <div>
+                    <CrossIcon handler={closeLeftNavbar} />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-2">
+                    <LeftNavbarItem label="Beranda" href="/" />
+                    <LeftNavbarItem label="Cek Transaksi" href="/invoices" />
+                    <LeftNavbarItem label="Kalkulator" href="/" />
+                    <LeftNavbarItem label="Leaderbord" href="/" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <LeftNavbarItem label="Masuk" href="/sign-in" />
+                    <LeftNavbarItem label="Daftar" href="/sign-up" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
       </div>
-    </div>
+    </>
   );
 }

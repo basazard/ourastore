@@ -29,7 +29,6 @@ export default function AdminAssets() {
       });
 
       const data = await res.json();
-      console.log(data);
       setAssets(data.data);
     } catch (err) {
       console.log(err);

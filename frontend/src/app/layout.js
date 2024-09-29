@@ -15,10 +15,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          {children}
-          <ToastContainer position="top-center" theme="dark" />
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
+        <ToastContainer position="top-center" theme="dark" />
       </body>
     </html>
   );

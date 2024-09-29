@@ -1,13 +1,14 @@
 import { Button } from "@nextui-org/react";
+import Image from "next/image";
 
-export function ServiceForm({ categories }) {
+export function ServiceForm({ categories, assets }) {
   return (
     <>
       <div>
         <span className="text-4xl font-bold text-primary">Service Form</span>
       </div>
       <div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
             <span bg>Fill a service name</span>
             <input
@@ -44,6 +45,23 @@ export function ServiceForm({ categories }) {
                 <>
                   <option value={category.id} key={index}>
                     {category.name}
+                  </option>
+                </>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span bg>Pick main assets</span>
+            <select
+              className="w-full p-2 rounded-lg text-sm bg-muted border-2 
+              border-transparent focus:border-primary focus:outline-none"
+              name="imageName"
+              required
+            >
+              {assets.map((asset, index) => (
+                <>
+                  <option value={asset.assetCodedName} key={index}>
+                    {asset.assetName}
                   </option>
                 </>
               ))}

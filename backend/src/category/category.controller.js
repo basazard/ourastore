@@ -3,7 +3,11 @@ const prisma = require("../db");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const categories = await prisma.category.findMany();
+  const categories = await prisma.category.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
 
   return res.status(200).send({
     status: "success",

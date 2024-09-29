@@ -1,36 +1,48 @@
 "use client";
 import { useEffect, useState } from "react";
 import AdminNavbar from "../components/navbar";
-import { Button } from "@nextui-org/react";
-import { toast } from "react-toastify";
+import Link from "next/link";
 import { EditModal } from "../components/editModal";
 import { DeleteButton } from "../components/deleteButton";
 import { AddForm } from "../components/addForm";
 import { ServiceForm } from "../components/serviceForm";
+import { fetchData, formRequest, deleteRequest } from "@/app/utils/fetchData";
+import {
+  Table,
+  TableBody,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  TableCell,
+} from "@nextui-org/react";
+import { usePathname } from "next/navigation";
 
 export default function AdminService() {
-  const baseUrl = process.env.NEXT_PUBLIC_BE_API_URL;
+  const pathname = usePathname();
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [assets, setAssets] = useState([]);
 
   useEffect(() => {
     fetchCategories();
+    fetchServices();
+    fetchAssets();
+    console.log(pathname);
   }, []);
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
+  async function fetchAssets() {
+    try {
+      const assets = await fetchData("assets");
+      setAssets(assets.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async function fetchServices() {
     try {
-      const res = await fetch(`${baseUrl}/services`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "GET",
-      });
-      const data = await res.json();
-      setServices(data.data);
+      const services = await fetchData("services");
+      setServices(services.data);
     } catch (err) {
       console.log(err);
     }
@@ -38,15 +50,8 @@ export default function AdminService() {
 
   async function fetchCategories() {
     try {
-      const res = await fetch(`${baseUrl}/categories`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "GET",
-      });
-
-      const data = await res.json();
-      setCategories(data.data);
+      const categories = await fetchData("categories");
+      setCategories(categories.data);
     } catch (err) {
       console.log(err);
     }
@@ -60,28 +65,7 @@ export default function AdminService() {
       form_object[key] = value;
     });
     try {
-      const res = await fetch(`${baseUrl}/services`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(form_object),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message, {
-          isLoading: false,
-          autoClose: 1000,
-        });
-        return;
-      }
-      toast.success(data.message, {
-        isLoading: false,
-        autoClose: 1000,
-      });
-      fetchServices();
+      await formRequest("services", form_object, fetchServices, "POST");
     } catch (err) {
       console.log(err);
     } finally {
@@ -91,28 +75,7 @@ export default function AdminService() {
 
   async function deleteService(serviceName) {
     try {
-      const res = await fetch(`${baseUrl}/services/${serviceName}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message, {
-          isLoading: false,
-          autoClose: 1000,
-        });
-        return;
-      }
-
-      toast.success(data.message, {
-        isLoading: false,
-        autoClose: 1000,
-      });
-      fetchServices();
+      await deleteRequest(`services/${serviceName}`, fetchServices);
     } catch (err) {
       console.log(err);
     }
@@ -126,34 +89,41 @@ export default function AdminService() {
       form_object[key] = value;
     });
     try {
-      const res = await fetch(`${baseUrl}/services/${serviceName}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-        body: JSON.stringify(form_object),
-      });
-
-      const data = await res.json();
-
-      console.log(data);
-
-      if (!res.ok) {
-        toast.error(data.message, {
-          isLoading: false,
-          autoClose: 1000,
-        });
-        return;
-      }
-      toast.success(data.message, {
-        isLoading: false,
-        autoClose: 1000,
-      });
-      fetchServices();
+      await formRequest(
+        `services/${serviceName}`,
+        form_object,
+        fetchServices,
+        "PUT"
+      );
     } catch (err) {
       console.log(err);
+    } finally {
+      e.target.reset();
     }
   }
+
+  const columns = [
+    {
+      key: "Service Name",
+      label: "Service Name",
+    },
+    {
+      key: "Service Owner",
+      label: "Service Owner",
+    },
+    {
+      key: "Category",
+      label: "Category",
+    },
+    {
+      key: "Edit",
+      label: "Edit",
+    },
+    {
+      key: "Delete",
+      label: "Delete",
+    },
+  ];
 
   return (
     <AdminNavbar>
@@ -163,19 +133,45 @@ export default function AdminService() {
             formContent={ServiceForm}
             handler={addService}
             categories={categories}
+            assets={assets}
           />
-          <div className="grid grid-cols-3 gap-4">
-            {services.map((service, index) => (
-              <div key={index} className="bg-muted rounded-lg p-4">
-                <div className="flex flex-row justify-between items-center">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xl font-bold">
-                      {service.category.name}
-                    </span>
-                    <span>{service.name}</span>
-                    <span className="text-sm">{service.owner}</span>
-                  </div>
-                  <div className="flex flex-col gap-2">
+          <Table
+            classNames={{
+              table: "bg-secondary",
+              wrapper: "bg-secondary",
+              th: "bg-muted",
+              tr: "hover:bg-muted",
+            }}
+          >
+            <TableHeader columns={columns}>
+              {(column) => (
+                <TableColumn key={column.key}>
+                  <span className="text-secondary-foreground text-opacity-50">
+                    {column.label}
+                  </span>
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody>
+              {services.map((service, index) => (
+                <TableRow key={index} className="text-secondary-foreground">
+                  <TableCell className="rounded-l-lg">
+                    <div className="flex flex-col">
+                      <span>{service.name}</span>
+                      <Link href={`${pathname}/${service.id}`}>
+                        <span className="text-secondary-foreground text-opacity-20 text-xs">
+                          More...
+                        </span>
+                      </Link>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span>{service.owner}</span>
+                  </TableCell>
+                  <TableCell>
+                    <span>{service.category.name}</span>
+                  </TableCell>
+                  <TableCell>
                     <EditModal
                       name="Service"
                       formField={EditServiceForm}
@@ -184,12 +180,14 @@ export default function AdminService() {
                       value2={service.owner}
                       categories={categories}
                     />
+                  </TableCell>
+                  <TableCell className="rounded-r-lg">
                     <DeleteButton handler={() => deleteService(service.name)} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </AdminNavbar>

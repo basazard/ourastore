@@ -2,6 +2,7 @@ const express = require("express");
 const prisma = require("../db");
 const router = express.Router();
 const { verifyToken } = require("../utils/utils");
+const { getObjectSignedUrl } = require("../utils/s3Config");
 
 router.get("/", async (req, res) => {
   const services = await prisma.service.findMany({
@@ -23,21 +24,29 @@ router.get("/:categoryId", async (req, res) => {
     where: { categoryId: catgId },
   });
 
+  const serviceWithImageUrl = await Promise.all(
+    servicesByCategory.map(async (service) => ({
+      ...service,
+      imageUrl: await getObjectSignedUrl(service.imageName),
+    }))
+  );
+
   return res.status(200).send({
     status: "success",
     message: "Services retrieved",
-    data: servicesByCategory,
+    data: serviceWithImageUrl,
   });
 });
 
 router.post("/", async (req, res) => {
-  const { serviceName, serviceOwner, catgId } = req.body;
+  const { serviceName, serviceOwner, catgId, imageName } = req.body;
   try {
     const service = await prisma.service.create({
       data: {
         name: serviceName,
         owner: serviceOwner,
         categoryId: catgId,
+        imageName: imageName,
       },
     });
 
@@ -106,6 +115,31 @@ router.put("/:name", async (req, res) => {
         message: `A ${err.meta.modelName} with that ${err.meta.target[0]} already exist`,
       });
     }
+    return res.status(500).send({
+      status: "failed",
+      message: err.message,
+    });
+  }
+});
+
+router.get("/service/:id", async (req, res) => {
+  const serviceId = req.params.id;
+  try {
+    const service = await prisma.service.findUnique({
+      where: {
+        id: serviceId,
+      },
+    });
+    if (!service) {
+      throw new Error("Service with that name not available");
+    }
+    service.imageUrl = await getObjectSignedUrl(service.imageName);
+    return res.status(200).send({
+      status: "success",
+      message: "service retrieved hbhb",
+      data: service,
+    });
+  } catch (err) {
     return res.status(500).send({
       status: "failed",
       message: err.message,

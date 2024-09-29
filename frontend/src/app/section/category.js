@@ -1,78 +1,89 @@
 "use client";
 
-import { useState } from "react";
-import { listCategory } from "../content-list/contentList";
-import Image from "next/image";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+
+import { fetchData } from "../utils/fetchData";
+import { Spinner } from "@nextui-org/react";
+import { ServiceCard } from "../components/serviceCard";
+import { CategoryNavigation } from "../components/categoryNavigation";
 
 export default function Category() {
   const [categoryState, setCategoryState] = useState(0);
-  const [animate, setAnimate] = useState(true);
+  const [animate, setAnimate] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState([]);
+  const [loadingService, setLoadingService] = useState(false);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      fetchServiceByCategory(categoryState);
+    }
+  }, [categories]);
+
+  async function fetchServiceByCategory(index) {
+    setLoadingService(true);
+    const services = await fetchData(`services/${categories[index].id}`);
+    setServices(services.data);
+    setLoadingService(false);
+    setAnimate(true);
+  }
+
+  async function fetchCategories() {
+    try {
+      const categories = await fetchData("categories");
+      setCategories(categories.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const changeCategory = (index) => {
     setAnimate(false);
-    setTimeout(() => {
-      setCategoryState(index);
-      setAnimate(true);
-    }, 100);
+    setCategoryState(index);
+    fetchServiceByCategory(index);
   };
 
   return (
-    <div className="px-20">
+    <div className="px-4 sm:px-20">
       <div className="flex flex-col gap-y-6">
-        <div className="flex flex-row gap-4">
-          {listCategory.map((category, index) => (
-            <div key={category.name}>
-              <button
-                className={`bg-muted px-3 py-2 rounded-lg hover:bg-primary duration-500 
-            ${categoryState === index ? "bg-primary" : "bg-muted"}`}
-                onClick={() => changeCategory(index)}
-              >
-                <span className="text-secondary-foreground text-sm">
-                  {category.name}
-                </span>
-              </button>
-            </div>
+        <div className="flex flex-row gap-4 overflow-x-auto">
+          {categories.map((category, index) => (
+            <CategoryNavigation
+              key={category.id}
+              category={category}
+              index={index}
+              navHandler={() => changeCategory(index)}
+              categoryState={categoryState}
+            />
           ))}
         </div>
-        {listCategory[categoryState].listImage.length > 0 ? (
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
-            {listCategory[categoryState].listImage.map((value, index) => (
-              <div
-                key={index}
-                className={`${animate ? "animate-slideUp" : ""} transition-all`}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <Link href={value.link}>
-                  <div className="relative group w-[192px] h-[288px]">
-                    <div
-                      className="absolute z-10 inset-0 bg-muted rounded-2xl opacity-0 transform 
-                  group-hover:opacity-40 group-hover:scale-105 duration-500"
-                    ></div>
-                    <Image
-                      src={value.image}
-                      className="ring-transparent ring-2 ring-offset-2 
-                    ring-offset-secondary group-hover:ring-primary rounded-2xl w-full
-                    h-full object-cover transform group-hover:scale-105 duration-500 bg-transparent group-hover:bg-black"
-                    />
-                    <div
-                      className="absolute z-20 bottom-2 left-3 right-2 transform opacity-0 translate-y-4 
-                  group-hover:opacity-100 group-hover:translate-y-0 transition-all ease-in-out duration-300"
-                    >
-                      <h1 className="text-secondary-foreground font-semibold text-base text-left truncate">
-                        {value.name}
-                      </h1>
-                      <p className="text-secondary-foreground text-xs font-light text-left">
-                        {value.owner}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+        {loadingService ? (
+          <div className="flex justify-center">
+            <Spinner />
           </div>
         ) : (
-          <div></div>
+          <>
+            {services.length > 0 ? (
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+                <>
+                  {services.map((service, index) => (
+                    <ServiceCard
+                      key={service.id}
+                      index={index}
+                      animate={animate}
+                      service={service}
+                    />
+                  ))}
+                </>
+              </div>
+            ) : (
+              <div></div>
+            )}
+          </>
         )}
         <div className="text-center">
           <button className="bg-secondary px-4 py-2 hover:bg-secondary/80 rounded-lg">

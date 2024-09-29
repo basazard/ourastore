@@ -30,7 +30,7 @@ export default function HomeSlider() {
   };
 
   return (
-    <div className="flex px-20 py-8">
+    <div className="flex px-4 sm:px-20 py-8">
       <div className="relative group">
         <Image
           src={sliderImage[currentIndex].image}
@@ -42,7 +42,7 @@ export default function HomeSlider() {
           onClick={() => prevSlide()}
         >
           <svg
-            className="text-white"
+            className="text-white h-3 w-3 sm:h-5 sm:w-5"
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
             viewBox="0 0 24 24"
@@ -58,7 +58,7 @@ export default function HomeSlider() {
           onClick={() => nextSlide()}
         >
           <svg
-            className="text-white"
+            className="text-white h-3 w-3 sm:h-5 sm:w-5"
             xmlns="http://www.w3.org/2000/svg"
             enable-background="new 0 0 24 24"
             height="24px"

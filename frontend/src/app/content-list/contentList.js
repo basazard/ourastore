@@ -26,7 +26,7 @@ import popular8 from "../assets/popular-games/joki-rank-paket.webp";
 import mlbbDiamondPass from "../assets/items-icon/mlbb/diamond-pass.webp";
 import twilightPass from "../assets/items-icon/mlbb/twilight-pass.webp";
 
-const customLink = (name) => {
+export const customLink = (name) => {
   const lowerCase = name.toLowerCase();
   const link = lowerCase.split(" ").join("-");
   return link;

@@ -6,6 +6,7 @@ import { EditModal } from "../components/editModal";
 import { DeleteButton } from "../components/deleteButton";
 import { AddForm } from "../components/addForm";
 import { ServiceForm } from "../components/serviceForm";
+import { EditServiceForm } from "../components/editServiceForm";
 import { fetchData, formRequest, deleteRequest } from "@/app/utils/fetchData";
 import {
   Table,
@@ -64,6 +65,7 @@ export default function AdminService() {
     formData.forEach((value, key) => {
       form_object[key] = value;
     });
+    console.log(form_object);
     try {
       await formRequest("services", form_object, fetchServices, "POST");
     } catch (err) {
@@ -152,7 +154,7 @@ export default function AdminService() {
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody>
+            <TableBody emptyContent={"No service"}>
               {services.map((service, index) => (
                 <TableRow key={index} className="text-secondary-foreground">
                   <TableCell className="rounded-l-lg">
@@ -191,41 +193,5 @@ export default function AdminService() {
         </div>
       </div>
     </AdminNavbar>
-  );
-}
-
-function EditServiceForm({ value1, value2, categories }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <input
-        className="p-2 rounded-lg text-sm bg-muted font-extralight text-secondary-foreground border-2 border-transparent focus:border-primary focus:outline-none"
-        type="text"
-        placeholder="Service name"
-        name="newServiceName"
-        defaultValue={value1}
-      ></input>
-      <input
-        className="p-2 rounded-lg text-sm bg-muted font-extralight text-secondary-foreground border-2 border-transparent focus:border-primary focus:outline-none"
-        type="text"
-        placeholder="Service order"
-        name="newServiceOwner"
-        defaultValue={value2}
-      ></input>
-      <select
-        className="w-full p-2 rounded-lg text-sm bg-muted border-2 
-              border-transparent focus:border-primary focus:outline-none
-              text-secondary-foreground"
-        name="newCatgId"
-        required
-      >
-        {categories.map((category, index) => (
-          <>
-            <option value={category.id} key={index}>
-              {category.name}
-            </option>
-          </>
-        ))}
-      </select>
-    </div>
   );
 }

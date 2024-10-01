@@ -1,12 +1,13 @@
 "use client";
-import { toast } from "react-toastify";
 import AdminNavbar from "../components/navbar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy } from "react";
 import { EditModal } from "../components/editModal";
 import { DeleteButton } from "../components/deleteButton";
 import { AddForm } from "../components/addForm";
 import { CategoryForm } from "../components/categoryForm";
+import { EditCategoryForm } from "../components/editCategoryForm";
 import { deleteRequest, fetchData, formRequest } from "@/app/utils/fetchData";
+import { categoryType } from "../components/categoryForm";
 import {
   Table,
   TableBody,
@@ -35,9 +36,13 @@ export default function AdminCategory() {
   async function addCategory(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const name = formData.get("name");
+    const form_object = {};
+    formData.forEach((value, key) => {
+      form_object[key] = value;
+    });
+
     try {
-      await formRequest("categories", { name }, fetchCategories, "POST");
+      await formRequest("categories", form_object, fetchCategories, "POST");
     } catch (err) {
       console.log(err);
     }
@@ -54,11 +59,14 @@ export default function AdminCategory() {
   async function updateCategory(e, categoryName) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const newName = formData.get("name");
+    const form_object = {};
+    formData.forEach((value, key) => {
+      form_object[key] = value;
+    });
     try {
       await formRequest(
         `categories/${categoryName}`,
-        { newName },
+        form_object,
         fetchCategories,
         "PUT"
       );
@@ -71,6 +79,10 @@ export default function AdminCategory() {
     {
       key: "category name",
       label: "Category Name",
+    },
+    {
+      key: "category type",
+      label: "Category Type",
     },
     {
       key: "edit",
@@ -104,18 +116,21 @@ export default function AdminCategory() {
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody>
+            <TableBody emptyContent={"No category available"}>
               {categories.map((category, index) => (
                 <TableRow key={index} className="text-secondary-foreground">
                   <TableCell className="rounded-l-lg">
                     <span>{category.name}</span>
                   </TableCell>
                   <TableCell>
+                    <span>{categoryType[category.type]}</span>
+                  </TableCell>
+                  <TableCell>
                     <EditModal
                       name="Category"
                       handler={(e) => updateCategory(e, category.name)}
                       formField={EditCategoryForm}
-                      value={category.name}
+                      value1={category.name}
                     />
                   </TableCell>
                   <TableCell className="rounded-r-lg">
@@ -130,19 +145,5 @@ export default function AdminCategory() {
         </div>
       </div>
     </AdminNavbar>
-  );
-}
-
-function EditCategoryForm({ value }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <input
-        className="p-2 rounded-lg text-sm bg-muted font-extralight text-secondary-foreground border-2 border-transparent focus:border-primary focus:outline-none"
-        type="text"
-        placeholder="Category name"
-        name="name"
-        defaultValue={value}
-      ></input>
-    </div>
   );
 }

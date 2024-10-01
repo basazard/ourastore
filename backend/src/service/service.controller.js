@@ -39,7 +39,8 @@ router.get("/:categoryId", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { serviceName, serviceOwner, catgId, imageName } = req.body;
+  const { serviceName, serviceOwner, catgId, imageName, instruction } =
+    req.body;
   try {
     const service = await prisma.service.create({
       data: {
@@ -47,6 +48,7 @@ router.post("/", async (req, res) => {
         owner: serviceOwner,
         categoryId: catgId,
         imageName: imageName,
+        instruction: instruction,
       },
     });
 

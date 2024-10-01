@@ -28,10 +28,12 @@ export default function AdminServiceDetail() {
   return (
     <>
       <AdminNavbar>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 text-secondary-foreground">
           <span className="text-primary text-4xl font-bold">
             {service.name} - {service.owner}
           </span>
+          <span className="text-2xl font-bold">Instruction</span>
+          <div dangerouslySetInnerHTML={{ __html: service.instruction }} />
         </div>
       </AdminNavbar>
     </>

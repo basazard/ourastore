@@ -1,7 +1,10 @@
+"use client";
+import { useState } from "react";
 import { Button } from "@nextui-org/react";
-import Image from "next/image";
+import { RichTextEditor } from "./richTextEditor";
 
 export function ServiceForm({ categories, assets }) {
+  const [instructionContent, setInstructionContent] = useState("");
   return (
     <>
       <div>
@@ -10,7 +13,7 @@ export function ServiceForm({ categories, assets }) {
       <div>
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <span bg>Fill a service name</span>
+            <span>Fill a service name</span>
             <input
               type="text"
               placeholder="Service name"
@@ -22,7 +25,7 @@ export function ServiceForm({ categories, assets }) {
             ></input>
           </div>
           <div className="flex flex-col gap-2">
-            <span bg>Fill a service owner</span>
+            <span>Fill a service owner</span>
             <input
               type="text"
               placeholder="Service owner"
@@ -34,7 +37,7 @@ export function ServiceForm({ categories, assets }) {
             ></input>
           </div>
           <div className="flex flex-col gap-2">
-            <span bg>Pick category</span>
+            <span>Pick category</span>
             <select
               className="w-full p-2 rounded-lg text-sm bg-muted border-2 
               border-transparent focus:border-primary focus:outline-none"
@@ -51,7 +54,7 @@ export function ServiceForm({ categories, assets }) {
             </select>
           </div>
           <div className="flex flex-col gap-2">
-            <span bg>Pick main assets</span>
+            <span>Pick main assets</span>
             <select
               className="w-full p-2 rounded-lg text-sm bg-muted border-2 
               border-transparent focus:border-primary focus:outline-none"
@@ -66,6 +69,16 @@ export function ServiceForm({ categories, assets }) {
                 </>
               ))}
             </select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span>Create your service instruction</span>
+            <RichTextEditor onContentChange={setInstructionContent} />
+            <textarea
+              name="instruction"
+              value={instructionContent}
+              hidden
+              readOnly
+            />
           </div>
         </div>
       </div>

@@ -17,12 +17,13 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { name } = req.body;
+  const { name, catType } = req.body;
 
   try {
     const category = await prisma.category.create({
       data: {
         name: name,
+        type: catType,
       },
     });
 
@@ -75,14 +76,15 @@ router.delete("/:name", async (req, res) => {
 
 router.put("/:name", async (req, res) => {
   const categoryName = req.params.name;
-  const { newName } = req.body;
+  const { name, catType } = req.body;
   try {
     const category = await prisma.category.update({
       where: {
         name: categoryName,
       },
       data: {
-        name: newName,
+        name: name,
+        type: catType,
       },
     });
 

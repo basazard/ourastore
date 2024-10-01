@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  DropdownSection,
 } from "@nextui-org/react";
 import {
   DropdownIcon,
@@ -65,12 +66,26 @@ export function NavbarAuthenticated({ handler, username }) {
           </div>
         </Button>
       </DropdownTrigger>
-      <DropdownMenu className="text-secondary-foreground">
+      <DropdownMenu
+        itemClasses={{
+          base: [
+            "text-secondary-foreground",
+            "data-[hover=true]:bg-muted",
+            "data-[hover=true]:text-secondary-foreground",
+          ],
+        }}
+      >
         <DropdownItem>
           <span className="text-xs font-light">
             Telah masuk sebagai <span className="block">{username}</span>
           </span>
         </DropdownItem>
+        <DropdownSection
+          classNames={{
+            divider: "bg-muted",
+          }}
+          showDivider
+        ></DropdownSection>
         <DropdownItem
           startContent={<Image className="h-4 w-4" src={ouraCoin} />}
         >

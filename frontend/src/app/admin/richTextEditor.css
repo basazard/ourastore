@@ -1,0 +1,15 @@
+.wrapper-class {
+  background-color: white;
+}
+
+.editor-class {
+  padding-left: 1rem;
+  background-color: white;
+  color: black;
+  min-height: 6rem;
+  display: block;
+}
+
+.toolbar-class {
+  color: black;
+}

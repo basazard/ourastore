@@ -4,12 +4,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "ourastore-bucket.s3.ap-southeast-1.amazonaws.com",
+        hostname: process.env.NEXT_PUBLIC_BUCKET_ORIGIN,
         pathname: "**",
       },
       {
         protocol: "https",
-        hostname: "d2vpoym06djd5u.cloudfront.net",
+        hostname: process.env.NEXT_PUBLIC_CLOUDFRONT_ORIGIN,
         pathname: "**",
       },
     ],

@@ -2,7 +2,7 @@
 import { transactionStep } from "../content-list/contentList";
 import { useState } from "react";
 
-export default function HowToTransaction() {
+export default function HowToTransaction(props) {
   const [closed, setClosed] = useState(false);
 
   const closeContent = (e) => {
@@ -34,19 +34,10 @@ export default function HowToTransaction() {
           closed ? "hidden" : ""
         }`}
       >
-        <span>
-          Top up ML diamond Mobile Legends harga paling murah. Cara topup MLBB
-          termurah :
-        </span>
-        <div className="px-6">
-          <ol className="list-decimal">
-            {transactionStep.map((step, index) => (
-              <li key={index} className="marker:text-primary marker:font-bold">
-                {step}
-              </li>
-            ))}
-          </ol>
-        </div>
+        <div
+          className="service-instruction"
+          dangerouslySetInnerHTML={{ __html: props.instruction }}
+        />
       </div>
     </div>
   );

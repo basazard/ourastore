@@ -14,6 +14,7 @@ const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const accessId = process.env.ACCESS_ID;
 const accessKey = process.env.ACCESS_KEY;
+const cloudFrontOrigin = process.env.CLOUDFRONT_ORIGIN;
 
 const s3 = new S3Client({
   credentials: {
@@ -66,4 +67,5 @@ module.exports = {
   uploadS3Object,
   deleteS3Object,
   getObjectSignedUrl,
+  cloudFrontOrigin,
 };

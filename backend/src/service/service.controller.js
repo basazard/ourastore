@@ -2,7 +2,7 @@ const express = require("express");
 const prisma = require("../db");
 const router = express.Router();
 const { verifyToken } = require("../utils/utils");
-const { getObjectSignedUrl } = require("../utils/s3Config");
+const { getObjectSignedUrl, cloudFrontOrigin } = require("../utils/s3Config");
 
 router.get("/", async (req, res) => {
   const services = await prisma.service.findMany({
@@ -15,26 +15,6 @@ router.get("/", async (req, res) => {
     status: "success",
     message: "Services retrieved",
     data: services,
-  });
-});
-
-router.get("/:categoryId", async (req, res) => {
-  const catgId = req.params.categoryId;
-  const servicesByCategory = await prisma.service.findMany({
-    where: { categoryId: catgId },
-  });
-
-  const serviceWithImageUrl = await Promise.all(
-    servicesByCategory.map(async (service) => ({
-      ...service,
-      imageUrl: await getObjectSignedUrl(service.imageName),
-    }))
-  );
-
-  return res.status(200).send({
-    status: "success",
-    message: "Services retrieved",
-    data: serviceWithImageUrl,
   });
 });
 
@@ -69,6 +49,31 @@ router.post("/", async (req, res) => {
       message: err.message,
     });
   }
+});
+
+router.get("/:categoryId", async (req, res) => {
+  const catgId = req.params.categoryId;
+  const servicesByCategory = await prisma.service.findMany({
+    where: { categoryId: catgId },
+  });
+
+  // const serviceWithImageUrl = await Promise.all(
+  //   servicesByCategory.map(async (service) => ({
+  //     ...service,
+  //     imageUrl: await getObjectSignedUrl(service.imageName),
+  //   }))
+  // );
+
+  const serviceWithImageUrl = servicesByCategory.map((service) => ({
+    ...service,
+    imageUrl: cloudFrontOrigin + "/" + service.imageName,
+  }));
+
+  return res.status(200).send({
+    status: "success",
+    message: "Services retrieved",
+    data: serviceWithImageUrl,
+  });
 });
 
 router.delete("/:name", async (req, res) => {
@@ -133,13 +138,49 @@ router.get("/service/:id", async (req, res) => {
       },
     });
     if (!service) {
-      throw new Error("Service with that name not available");
+      throw new Error("Service not available");
     }
-    service.imageUrl = await getObjectSignedUrl(service.imageName);
+    // service.imageUrl = await getObjectSignedUrl(service.imageName);
+    service.imageUrl = cloudFrontOrigin + "/" + service.imageName;
     return res.status(200).send({
       status: "success",
-      message: "service retrieved hbhb",
+      message: "service retrieved",
       data: service,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      status: "failed",
+      message: err.message,
+    });
+  }
+});
+
+router.put("/service/instruction/:id", async (req, res) => {
+  const serviceId = req.params.id;
+  const { instruction } = req.body;
+  try {
+    const service = await prisma.service.findUnique({
+      where: {
+        id: serviceId,
+      },
+    });
+
+    if (!service) {
+      throw new Error("Service not found");
+    }
+
+    await prisma.service.update({
+      where: {
+        id: serviceId,
+      },
+      data: {
+        instruction: instruction,
+      },
+    });
+
+    return res.status(200).send({
+      status: "success",
+      message: "Instruction updated",
     });
   } catch (err) {
     return res.status(500).send({

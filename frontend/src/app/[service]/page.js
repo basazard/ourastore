@@ -52,7 +52,7 @@ export default function ServiceDetail() {
         <div className="px-4 sm:px-20 py-4 sm:py-10 sm:grid sm:grid-cols-3 flex flex-col gap-6">
           <div className="flex flex-col gap-4">
             <CopyAffiliateLink />
-            <HowToTransaction />
+            <HowToTransaction instruction={serviceData.instruction} />
             <div className="hidden sm:block">
               <GameReview />
             </div>

@@ -7,6 +7,7 @@ const {
   uploadS3Object,
   deleteS3Object,
   getObjectSignedUrl,
+  cloudFrontOrigin,
 } = require("../utils/s3Config");
 
 router.delete("/:id", async (req, res) => {
@@ -44,12 +45,20 @@ router.get("/", async (req, res) => {
         assetName: "asc",
       },
     });
-    const newAssetWithSignedUrl = await Promise.all(
-      assets.map(async (asset) => ({
-        ...asset,
-        imageUrl: await getObjectSignedUrl(asset.assetCodedName),
-      }))
-    );
+
+    // Using AWS S3 signed URL
+    // const newAssetWithSignedUrl = await Promise.all(
+    //   assets.map(async (asset) => ({
+    //     ...asset,
+    //     imageUrl: await getObjectSignedUrl(asset.assetCodedName),
+    //   }))
+    // );
+
+    const newAssetWithSignedUrl = assets.map((asset) => ({
+      ...asset,
+      imageUrl: cloudFrontOrigin + "/" + asset.assetCodedName,
+    }));
+
     return res.status(200).send({
       status: "success",
       message: "Assets retrived",

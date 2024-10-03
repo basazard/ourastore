@@ -28,7 +28,6 @@ export default function AdminService() {
     fetchCategories();
     fetchServices();
     fetchAssets();
-    console.log(pathname);
   }, []);
 
   async function fetchAssets() {
@@ -65,7 +64,6 @@ export default function AdminService() {
     formData.forEach((value, key) => {
       form_object[key] = value;
     });
-    console.log(form_object);
     try {
       await formRequest("services", form_object, fetchServices, "POST");
     } catch (err) {

@@ -14,6 +14,7 @@ import {
   NavigationContent,
   ServiceIcon,
 } from "./navigationContent";
+import Link from "next/link";
 
 export default function AdminNavbar({ children }) {
   const { setAuthenticated } = useContext(AuthContext);
@@ -34,10 +35,12 @@ export default function AdminNavbar({ children }) {
             <div className="px-4 py-2">
               <div className="flex flex-row justify-between">
                 <div className="flex flex-row gap-2 items-center">
-                  <Image
-                    src={logoOuraStore}
-                    className="h-20 w-20 object-contain"
-                  />
+                  <Link href="/">
+                    <Image
+                      src={logoOuraStore}
+                      className="h-20 w-20 object-contain"
+                    />
+                  </Link>
                   <span className="font-semibold text-primary">
                     Admin OuraStore
                   </span>
